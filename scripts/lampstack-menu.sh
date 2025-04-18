@@ -38,6 +38,21 @@ function toggle_dry_run() {
   pause
 }
 
+function toggle_both() {
+  if "$DEBUG" && "$DRY_RUN"; then
+    DEBUG=false
+    DRY_RUN=false
+    echo "Debug mode is now OFF."
+    echo "Dry-run mode is now OFF."
+  else
+    DEBUG=true
+    DRY_RUN=true
+    echo "Debug mode is now ON."
+    echo "Dry-run mode is now ON."
+  fi
+  pause
+}
+
 function pause() {
   read -rp "Press [Enter] to return to the menu..."
 }
@@ -46,8 +61,9 @@ function main_menu() {
   while true; do
     header
     echo "Choose an option:"
-    echo "d) Toggle Debug Mode"
-    echo "n) Toggle Dry-Run Mode"
+    echo "b) Toggle Both Debug and Dry-Run ($(if "$DEBUG" && "$DRY_RUN"; then echo "OFF"; else echo "ON"; fi))"
+    echo "d) Toggle Debug Mode ($(if "$DEBUG"; then echo "ON"; else echo "OFF"; fi))"
+    echo "r) Toggle Dry-Run Mode ($(if "$DRY_RUN"; then echo "ON"; else echo "OFF"; fi))"
     echo "1) Install LAMP stack"
     echo "2) Install Miva Empresa Engine"
     echo "3) Add a new virtual host"
@@ -58,13 +74,16 @@ function main_menu() {
     echo "8) Set server hostname"
     echo "9) Exit"
     echo
-    read -rp "Enter choice [d/n/1-9]: " choice
+    read -rp "Enter choice [b/d/r/1-9]: " choice
 
     case $choice in
+      b)
+        toggle_both
+        ;;
       d)
         toggle_debug
         ;;
-      n)
+      r)
         toggle_dry_run
         ;;
       1)
