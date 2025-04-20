@@ -55,7 +55,7 @@ add_ip_to_netplan "$ip"
 
 docroot="/var/www/$domain"
 cgibin="$docroot/cgi-bin"
-mivadata="/var/www/${domain}-data"
+mivadata="$docroot/mivadata"
 
 log "Creating directories $docroot, $cgibin, $mivadata..."
 if [[ "$DRY_RUN" == "true" ]]; then
