@@ -1,6 +1,10 @@
 #!/bin/bash
 # utils.sh - Shared helper functions for LAMP + Miva stack setup
 
+# Use environment variables if set, otherwise default to false
+DEBUG=${DEBUG:-false}
+DRY_RUN=${DRY_RUN:-false}
+
 LAMP_CONFIG_DIR="/etc/lampstack"
 IP_CONFIG_FILE="$LAMP_CONFIG_DIR/site-ips.conf"
 LOG_FILE="/var/log/lampstack-install.log"
@@ -9,8 +13,6 @@ IP_START=10
 IP_END=99
 NETPLAN_FILE="/etc/netplan/01-netcfg.yaml"
 INTERFACE="enp0s8"
-DEBUG=false
-DRY_RUN=false
 
 mkdir -p "$LAMP_CONFIG_DIR"
 touch "$IP_CONFIG_FILE"

@@ -8,9 +8,10 @@ BUILTIN_DIR="$MIVA_ENGINE/lib/builtins"
 CERTS_DIR="$MIVA_ENGINE/certs/openssl-1.0"
 MYSQL_LIB="$MIVA_ENGINE/lib/databases/mysql.so"
 CGI_BINARY="$MIVA_ENGINE/cgi-bin/mivavm"
-ENV_CONFIG="<span class="math-inline">MIVA\_ENGINE/lib/config/env\.so"
-read \-rp "Enter domain to add Miva Empresa to \(e\.g\., project1\.local\)\: " domain
-domain\=</span>(echo "$domain" | tr '[:upper:]' '[:lower:]')
+ENV_CONFIG="$MIVA_ENGINE/lib/config/env.so"
+
+read -rp "Enter domain to add Miva Empresa to (e.g., project1.local): " domain
+domain=$(echo "$domain" | tr '[:upper:]' '[:lower:]')
 
 if ! grep -q "^$domain=" "$IP_CONFIG_FILE"; then
   log "Domain $domain is not configured. Run add-virtualhost.sh first."
@@ -21,8 +22,8 @@ vhost_file="/etc/apache2/sites-available/$domain.conf"
 
 if ! grep -q "SetEnv HTTP_MvCONFIG_DIR_MIVA" "$vhost_file"; then
   miva_config_block="
-    SetEnv HTTP_MvCONFIG_DIR_MIVA /var/www/<span class="math-inline">domain
-SetEnv HTTP\_MvCONFIG\_DIR\_DATA /var/www/</span>{domain}-data
+    SetEnv HTTP_MvCONFIG_DIR_MIVA /var/www/$domain
+    SetEnv HTTP_MvCONFIG_DIR_DATA /var/www/${domain}-data
     SetEnv HTTP_MvCONFIG_DIR_BUILTIN $BUILTIN_DIR
     SetEnv HTTP_MvCONFIG_DIR_CA $CERTS_DIR
     SetEnv HTTP_MvCONFIG_FILE_CA /etc/ssl/certs/ca-certificates.crt
@@ -67,5 +68,20 @@ SetEnv HTTP\_MvCONFIG\_DIR\_DATA /var/www/</span>{domain}-data
       log "DEBUG: DRY-RUN - sudo chmod 0755 \"/var/www/$domain/cgi-bin/libmivaconfig.so\""
     else
       sudo mkdir -p "/var/www/$domain/cgi-bin"
-      sudo cp "$ENV_CONFIG" "/var/www/<span class="math-inline">domain/cgi\-bin/libmivaconfig\.so"
-sudo chown www\-data\:www\-data "/var/www/</span>
+      sudo cp "$ENV_CONFIG" "/var/www/$domain/cgi-bin/libmivaconfig.so"
+      sudo chown www-data:www-data "/var/www/$domain/cgi-bin/libmivaconfig.so"
+      sudo chmod 0755 "/var/www/$domain/cgi-bin/libmivaconfig.so"
+    fi
+  fi
+
+  log "Restarting Apache..."
+  if [[ "$DRY_RUN" == "true" ]]; then
+    log "DEBUG: DRY-RUN - sudo systemctl restart apache2"
+  else
+    sudo systemctl restart apache2
+  fi
+
+  log "Miva Empresa added to $domain"
+else
+  log "Miva Empresa configuration already exists for $domain"
+fi
