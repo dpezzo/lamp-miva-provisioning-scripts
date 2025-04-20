@@ -9,7 +9,7 @@ domain=$(echo "$domain" | tr '[:upper:]' '[:lower:]')
 
 vhost_file="/etc/apache2/sites-available/$domain.conf"
 docroot="/var/www/$domain"
-mivadata="/var/www/${domain}-data"
+mivadata="/var/www/${domain}/mivadata"
 
 log "Disabling site $domain..."
 if [[ "$DRY_RUN" == "true" ]]; then
