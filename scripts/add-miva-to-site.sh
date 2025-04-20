@@ -23,7 +23,7 @@ vhost_file="/etc/apache2/sites-available/$domain.conf"
 if ! grep -q "SetEnv HTTP_MvCONFIG_DIR_MIVA" "$vhost_file"; then
   miva_config_block="
     SetEnv HTTP_MvCONFIG_DIR_MIVA /var/www/$domain
-    SetEnv HTTP_MvCONFIG_DIR_DATA /var/www/${domain}-data
+    SetEnv HTTP_MvCONFIG_DIR_DATA /var/www/${domain}/mivadata
     SetEnv HTTP_MvCONFIG_DIR_BUILTIN $BUILTIN_DIR
     SetEnv HTTP_MvCONFIG_DIR_CA $CERTS_DIR
     SetEnv HTTP_MvCONFIG_FILE_CA /etc/ssl/certs/ca-certificates.crt
